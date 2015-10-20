@@ -1,0 +1,40 @@
+; -------------
+; exemple.avm -
+; -------------
+push int32(42) ; pousse un entier
+push int32(33)
+
+add
+
+push float(44.554845)
+push float(88888)
+
+push double(65)
+push double(65.8aa1)
+
+mul
+
+push int16(999999999999999999999999999)
+
+pu int(32))
+push int16(32 ;)
+push int16(aaaa)
+
+push double(42.42)
+push int32(42)
+push int32()
+push int8(200)
+push int16(33200)
+push int32(2147483648)
+
+banania
+
+push 
+
+dump
+
+pop
+
+assert double(42.42)
+
+exit
