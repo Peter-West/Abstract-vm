@@ -12,4 +12,16 @@ class OverflowError : public std::exception {
 	virtual const char* what() const throw ();
 };
 
+class EmptyStackError : public std::exception {
+	virtual const char* what() const throw ();
+};
+
+class AssertError : public std::exception {
+	virtual const char* what() const throw ();
+};
+
+class NotEnoughValuesError : public std::exception {
+	virtual const char* what() const throw ();
+};
+
 #endif

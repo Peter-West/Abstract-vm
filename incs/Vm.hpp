@@ -7,11 +7,17 @@
 
 class Vm {
 	private:
+		Vm();
 		Vm(Vm const &src);
 		Vm &operator=(Vm const & rhs);
+		Vm(std::vector<Token> *listInstr);
+		std::vector<IOperand const *> *vmt;
+
+		std::map<std::string, eOperandType>	_typeMap;
+		std::map<std::string, functInstr>	_functInstr;
+
 
 	public: 
-		Vm();
 		~Vm();
 		void	push();
 		void	pop();
