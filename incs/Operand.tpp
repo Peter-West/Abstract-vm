@@ -22,7 +22,9 @@ public:
 	Operand<T>(T value, eOperandType type) : _value(value), _type(type), _str(std::to_string(_value)) {
 	}
 	
-	virtual ~Operand<T>(void);
+	virtual ~Operand<T>(void) {
+		
+	}
 
 	virtual int getPrecision( void ) const {
 		return (_type);

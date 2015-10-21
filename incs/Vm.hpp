@@ -1,6 +1,10 @@
 #ifndef VM_HPP
 # define VM_HPP
 
+#include <vector>
+#include <iostream>
+#include "Token.hpp"
+
 class Vm {
 	private:
 		Vm(Vm const &src);
@@ -20,6 +24,7 @@ class Vm {
 		void	mod();
 		void	print();
 		void	exit(void);
+		void	exec(std::vector<Token>*);
 	};
 
 

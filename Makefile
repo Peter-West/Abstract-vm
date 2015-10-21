@@ -11,7 +11,7 @@
 #******************************************************************************#
 
 NAME				:= avm
-SRCS				:= main.cpp parse.cpp Factory.cpp Ops.cpp Vm.cpp
+SRCS				:= main.cpp parse.cpp Factory.cpp Ops.cpp Vm.cpp Errors.cpp Token.cpp
 PATH_OBJ			:= objs
 PATH_SRC			:= srcs
 PATH_INC			:= incs
