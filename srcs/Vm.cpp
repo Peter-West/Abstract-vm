@@ -1,34 +1,57 @@
 #include "Vm.hpp"
 #include <cstdlib>
 #include <vector>
+#include "Errors.hpp"
+#include "parse.hpp"
+#include "Ops.hpp"
+
+// Vm::Vm() {
+// }
 
 Vm::Vm() {
-}
-
-Vm::Vm(std::vector<Token> *listInstr) {
 	vmt = new std::vector<IOperand const *>();
-	std::map<std::string, eOperandType> _typeMap = {
+/*	this->_typeMap = {
 		{"int8", INT8},
 		{"int16", INT16},
 		{"int32", INT32},
 		{"float", FLOAT},
 		{"double", DOUBLE}
-	};
+	};*/
 
-	std::map<std::string, functInstr>	_functInstr = {
-		{"push"], &Vm::push},
-		{"pop"], &Vm::pop},
-		{"assert"], &Vm::assert},
-		{"dump"], &Vm::dump},
-		{"add"], &Vm::add},
-		{"sub"], &Vm::sub},
-		{"mul"], &Vm::mul},
-		{"div"], &Vm::div},
-		{"mod"], &Vm::mod},
-		{"exit"], &Vm::exit},
-		{"print"], &Vm::print}
-	};
+	
+		_typeMap["int8"] = INT8;
+		_typeMap["int16"] = INT16;
+		_typeMap["int32"] = INT32;
+		_typeMap["float"] = FLOAT;
+		_typeMap["double"] = DOUBLE;
+
+/*	this->_functInstr = {
+		{"push", &Vm::push},
+		{"pop", &Vm::pop},
+		{"assert", &Vm::assert},
+		{"dump", &Vm::dump},
+		{"add", &Vm::add},
+		{"sub", &Vm::sub},
+		{"mul", &Vm::mul},
+		{"div", &Vm::div},
+		{"mod", &Vm::mod},
+		{"exit", &Vm::exit},
+		{"print", &Vm::print}
+	};*/
+
+		_functInstr["push"] = &Vm::push;
+		_functInstrNoArgs["pop"] = &Vm::pop;
+		_functInstr["assert"] = &Vm::assert;
+		_functInstrNoArgs["dump"] = &Vm::dump;
+		_functInstrNoArgs["add"] = &Vm::add;
+		_functInstrNoArgs["sub"] = &Vm::sub;
+		_functInstrNoArgs["mul"] = &Vm::mul;
+		_functInstrNoArgs["div"] = &Vm::div;
+		_functInstrNoArgs["mod"] = &Vm::mod;
+		_functInstrNoArgs["exit"] = &Vm::exit;
+		_functInstrNoArgs["print"] = &Vm::print;
 }
+
 Vm::Vm(Vm const &src) {
 	*this = src;
 }
@@ -54,15 +77,15 @@ void	Vm::pop(){
 }
 
 void	Vm::dump(){
-	std::vector<IOperand const *>reverse_iterator it;
+	std::vector<IOperand const *>::reverse_iterator it;
 
 	for (it = vmt->rbegin(); it != vmt->rend(); ++it) {
-		std::cout<< it->to_string() << std::endl;
+		std::cout<< (*it)->toString() << std::endl;
 	}
 }
 
 void	Vm::assert(IOperand const * io){
-	if (vmt->empty() || vmt->st->back()->getType() != io->getType() || vmt->st->back()->getValue() != io->getValue() )
+	if (vmt->empty() || vmt->back()->getType() != io->getType() || vmt->back()->toString() != io->toString() )
 		throw AssertError();
 }
 
@@ -151,7 +174,7 @@ void	Vm::print(){
 		throw EmptyStackError();
 	if (vmt->back()->getType() != INT8)
 		throw AssertError();
-	std::cout<<vmt->back()->to_string()<<std::endl;
+	std::cout<<vmt->back()->toString()<<std::endl;
 }
 
 void	Vm::exit(void){
@@ -159,15 +182,18 @@ void	Vm::exit(void){
 }
 
 
-void	Vm::exec(std::vector<Token> *listInstr)
+void	Vm::exec(std::vector<Token> &listInstr)
 {
 	Factory		f;
-	Token		*tmpInstr;
 
-	for (std::vector<Token>::iterator it = listInstr->begin(); it != listInstr->end(); ++it) {
-		tmpInstr = *it;
-		if (it->getInstr() == "push" || it->getInstr() == "assert") {
-			f.createOperand(Vm::_typeMap[it->getType()], it->getValue())
+	for (std::vector<Token>::iterator it = listInstr.begin(); it != listInstr.end(); ++it) {
+		if (_functInstr.find(it->getInstr()) != _functInstr.end()) {
+			std::cout << it->getInstr() << " " <<  it->getType() << " " << it->getValue() << std::endl;
+			(*Vm::_functInstr[it->getInstr()])(f.createOperand(Vm::_typeMap[it->getType()], it->getValue()));
+		}
+		else if (_functInstrNoArgs.find(it->getInstr()) != _functInstrNoArgs.end()) {
+			std::cout << it->getInstr() << std::endl;
+			(*Vm::_functInstrNoArgs[it->getInstr()])();
 		}
 		/*if (!(it->getType()).empty())
 			std::cout << it->getInstr() << " args : " <<  it->getType() << ", " << it->getValue() << std::endl;
@@ -176,7 +202,7 @@ void	Vm::exec(std::vector<Token> *listInstr)
 	}
 }
 
-
+/*
 void	Vm::exec(std::vector<Token> & vt)
 {
 	Factory						 f;
@@ -201,3 +227,16 @@ void	Vm::exec(std::vector<Token> & vt)
 	}
 	throw ExitError();
 }
+
+
+*/
+
+
+
+
+
+
+
+
+
+

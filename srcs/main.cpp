@@ -8,14 +8,14 @@
 int main(int argc, char **argv)
 {
 	parse		*P;
-	Vm			*Vm;
+	Vm			*VirM;
 
 	try
 	{
 		if (argc == 2) {
 			P = new parse(argv[1]);
-			Vm = new class Vm();
-			Vm->exec(P->vecTok);
+			VirM = new Vm();
+			VirM->exec(*P->vecTok);
 		}
 		else if (argc == 1)
 			P = new parse();

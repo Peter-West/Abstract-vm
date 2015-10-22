@@ -3,34 +3,40 @@
 
 #include <vector>
 #include <iostream>
+#include <map>
 #include "Token.hpp"
+#include "Factory.hpp"
+#include "IOperand.hpp"
 
 class Vm {
 	private:
-		Vm();
 		Vm(Vm const &src);
 		Vm &operator=(Vm const & rhs);
-		Vm(std::vector<Token> *listInstr);
 		std::vector<IOperand const *> *vmt;
+
+		typedef void (Vm::*functInstr)(IOperand const *);
+		typedef void (Vm::*functInstrNoArgs)(void);
 
 		std::map<std::string, eOperandType>	_typeMap;
 		std::map<std::string, functInstr>	_functInstr;
+		std::map<std::string, functInstrNoArgs>	_functInstrNoArgs;
 
 
 	public: 
+		Vm();
 		~Vm();
-		void	push();
-		void	pop();
-		void	dump();
-		void	assert();
-		void	add();
-		void	sub();
-		void	mul();
-		void	div();
-		void	mod();
-		void	print();
+		void	push(IOperand const * io);
+		void	pop(void);
+		void	dump(void);
+		void	assert(IOperand const * io);
+		void	add(void);
+		void	sub(void);
+		void	mul(void);
+		void	div(void);
+		void	mod(void);
+		void	print(void);
 		void	exit(void);
-		void	exec(std::vector<Token>*);
+		void	exec(std::vector<Token> &);
 	};
 
 

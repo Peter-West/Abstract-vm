@@ -2,6 +2,7 @@
 # define TOKEN_HPP
 
 # include <string>
+# include "Token.hpp"
 
 class Token
 {
