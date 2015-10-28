@@ -75,7 +75,8 @@ void	parse::_file_read(char *name) {
 		_check_tokens();
 	}
 	else
-		std::cout<<"Error while opening the file : " << name <<std::endl;
+		throw FileError();
+		// std::cout<<"Error while opening the file : " << name <<std::endl;
 }
 
 void	parse::_fill_start_array() {
@@ -102,16 +103,11 @@ void					parse::_check_tokens() {
 	size_t				found_instruction;
 
 	vecTok = new std::vector<Token>;
-
 	for (std::vector<int>::size_type i = 0; i != _tokens.size(); i++) {
 		for (std::vector<int>::size_type j = 0; j != _instructions_type.size(); j++) {
 			if ((found_instruction = _tokens[i].find(_instructions_type[j], 0)) != std::string::npos) {
 				instructions.push_back(_tokens[i]);
-
-				instr = _tokens[i];
-				// if (_tokens[i] == "pop" && values.empty())
-				// 	errors.push_back("Error - The values stack is empty, pop can't unstack");
-				
+				instr = _tokens[i];				
 				if (_tokens[i] == "push" || _tokens[i] == "assert") {
 					if (!_tokens[i + 1].empty()) {
 						for (std::vector<int>::size_type k = 0; k != _values_type.size(); k++) {
@@ -121,7 +117,6 @@ void					parse::_check_tokens() {
 								size_t stop = _tokens[i + 1].find(")",0) ;
 								std::string r_value = _tokens[i + 1].substr(start, stop - start);
 								if (!r_value.empty() && stop != std::string::npos && start != std::string::npos) {
-									//To do : division by 0
 									if (_check_values(_tokens[i + 1], r_value)) {
 										value = r_value;
 										vecTok->push_back(Token(instr, type, value));
@@ -145,13 +140,9 @@ void					parse::_check_tokens() {
 				errors.push_back("Error - Syntax error : " + _tokens[i]);
 		}
 	}
-	_check_exit();
 }
 
 bool					parse::_check_values(std::string type, std::string value) {
-	// std::cout<<"*** debug type : " << type;
-	// std::cout<<" *** debug value : " << value << std::endl;
-
 	if (type.find("int8", 0, 4) != std::string::npos)	{
 		std::regex reg("[-]?[0-9]+");
 		if (!std::regex_match(value, reg)) {
@@ -216,31 +207,6 @@ bool					parse::_check_values(std::string type, std::string value) {
 	}
 	return (true);
 }
-
-void					parse::_check_exit() {
-	for (std::vector<int>::size_type i = 0; i != instructions.size() ; i++) {
-		if (instructions[i] == "exit")
-			return ;
-	}
-	errors.push_back("Error - No exit instruction ");
-}
-/*
-void					parse::_check_instructions() {
-	size_t				found;
-
-	if (!instructions.empty()) {
-		for (std::vector<int>::size_type i = 0; i != instructions.size() ; i++) {
-			for(std::vector<int>::size_type j = 0; j != _instructions_type.size(); j++) {
-				if ((found = instructions[i].find(_instructions_type[j], 0)) != std::string::npos) {
-					break ;
-				}
-			}
-			if (found == std::string::npos)
-				errors.push_back("Error - Instruction unkown : " + instructions[i]);
-			std::cout<<instructions[i]<<std::endl;
-		}
-	}
-}*/
 
 void					parse::_list_errors() {
 	if (!errors.empty()) {

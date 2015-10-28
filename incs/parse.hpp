@@ -41,7 +41,6 @@ private:
 	void						_fill_start_array();
 	void						_list_errors();
 	void						_print_values();
-	void						_check_exit();
 	bool						_check_values(std::string type, std::string value);
 	std::list<std::string>		_raw_file;
 	std::vector<std::string>	_tokens;

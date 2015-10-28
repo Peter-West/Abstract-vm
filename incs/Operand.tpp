@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <math.h>
+# include "Errors.hpp"
 # include "IOperand.hpp"
 # include "Factory.hpp"
 
@@ -55,13 +56,22 @@ public:
 
 	virtual IOperand const * operator/( IOperand const & rhs ) const {
 		eOperandType type =  (getPrecision() < rhs.getPrecision()) ? rhs.getType() : _type;
-		return Factory::instance()->createOperand(type, std::to_string(this->_value / std::stod(rhs.toString())));
+		double rnb = std::stod(rhs.toString());
+		if (rnb == 0)
+			throw DivByZeroError();
+
+		return Factory::instance()->createOperand(type, std::to_string(this->_value / rnb));
 	}
 
 	virtual IOperand const * operator%( IOperand const & rhs ) const {
 		std::string	res;
 		eOperandType type =  (getPrecision() < rhs.getPrecision()) ? rhs.getType() : _type;
-		res = std::to_string(fmod(this->_value, std::stod(rhs.toString())));
+		
+		double rnb = std::stod(rhs.toString());
+		if (rnb == 0)
+			throw DivByZeroError();
+
+		res = std::to_string(fmod(this->_value, rnb));
 		return Factory::instance()->createOperand(type, res);
 	}
 

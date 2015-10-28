@@ -1,5 +1,10 @@
 #include "Factory.hpp"
 #include "Ops.hpp"
+#include "Errors.hpp"
+#include <stdexcept>
+#include <climits>
+#include <cfloat>
+#include <cfenv>
 
 static Factory* t_instance;
 
@@ -34,25 +39,83 @@ IOperand const * Factory::createOperand( eOperandType type, std::string const & 
 }
 
 IOperand const * Factory::createInt8( std::string const & value ) const {
-	return (new Int8(stod(value)));
+	double	test;
+
+	std::feclearexcept(FE_OVERFLOW);
+	std::feclearexcept(FE_UNDERFLOW);
+	test = stod(value);
+	if (std::fetestexcept(FE_UNDERFLOW))
+		throw UnderflowError();
+	if (std::fetestexcept(FE_OVERFLOW))
+		throw OverflowError();
+	if (test < SCHAR_MIN)
+		throw UnderflowError();
+	else if (test > SCHAR_MAX)
+		throw OverflowError();
+	return (new Int8(test));
 }
 
 IOperand const * Factory::createInt16( std::string const & value ) const {
-	
-	return (new Int16(stod(value)));
+	double	test;
+
+	std::feclearexcept(FE_OVERFLOW);
+	std::feclearexcept(FE_UNDERFLOW);
+	test = stod(value);
+	if (std::fetestexcept(FE_UNDERFLOW))
+		throw UnderflowError();
+	if (std::fetestexcept(FE_OVERFLOW))
+		throw OverflowError();
+	if (test < SHRT_MIN)
+		throw UnderflowError();
+	else if (test > SHRT_MAX)
+		throw OverflowError();
+	return (new Int16(test));
 }
 
 IOperand const * Factory::createInt32( std::string const & value ) const {
 	
-	return (new Int32(stod(value)));
+	double	test;
+
+	std::feclearexcept(FE_OVERFLOW);
+	std::feclearexcept(FE_UNDERFLOW);
+	test = stod(value);
+	if (std::fetestexcept(FE_UNDERFLOW))
+		throw UnderflowError();
+	if (std::fetestexcept(FE_OVERFLOW))
+		throw OverflowError();
+	if (test < INT_MIN)
+		throw UnderflowError();
+	else if (test > INT_MAX)
+		throw OverflowError();
+	return (new Int32(test));
 }
 
 IOperand const * Factory::createFloat( std::string const & value ) const {
-	
-	return (new Float(stod(value)));
+	double test;
+
+	std::feclearexcept(FE_OVERFLOW);
+    std::feclearexcept(FE_UNDERFLOW);
+	test = stod(value);
+	if (std::fetestexcept(FE_UNDERFLOW))
+		throw UnderflowError();
+	if (std::fetestexcept(FE_OVERFLOW))
+		throw OverflowError();
+	if (test < FLT_MIN)
+		throw UnderflowError();
+	if (test > FLT_MAX)
+		throw OverflowError();
+	return (new Float(test));
 }
 
 IOperand const * Factory::createDouble( std::string const & value ) const {
-	
-	return (new Double(stod(value)));
+	double	test;
+
+	std::feclearexcept(FE_OVERFLOW);
+    std::feclearexcept(FE_UNDERFLOW);
+	test = stod(value);
+	if (std::fetestexcept(FE_UNDERFLOW))
+		throw UnderflowError();
+	if (std::fetestexcept(FE_OVERFLOW))
+		throw OverflowError();
+	return (new Double(test));
 }

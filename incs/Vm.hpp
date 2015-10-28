@@ -21,7 +21,6 @@ class Vm {
 		std::map<std::string, functInstr>	_functInstr;
 		std::map<std::string, functInstrNoArgs>	_functInstrNoArgs;
 
-
 	public: 
 		Vm();
 		~Vm();

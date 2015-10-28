@@ -4,6 +4,10 @@
 # include <exception>
 # include <string>
 
+class FileError : public std::exception {
+	virtual const char* what() const throw ();
+};
+
 class UnderflowError : public std::exception {
 	virtual const char* what() const throw ();
 };
@@ -21,6 +25,14 @@ class AssertError : public std::exception {
 };
 
 class NotEnoughValuesError : public std::exception {
+	virtual const char* what() const throw ();
+};
+
+class DivByZeroError : public std::exception {
+	virtual const char* what() const throw ();
+};
+
+class ExitError : public std::exception {
 	virtual const char* what() const throw ();
 };
 

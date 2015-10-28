@@ -10,34 +10,12 @@
 
 Vm::Vm() {
 	vmt = new std::vector<IOperand const *>();
-/*	this->_typeMap = {
-		{"int8", INT8},
-		{"int16", INT16},
-		{"int32", INT32},
-		{"float", FLOAT},
-		{"double", DOUBLE}
-	};*/
-
 	
 		_typeMap["int8"] = INT8;
 		_typeMap["int16"] = INT16;
 		_typeMap["int32"] = INT32;
 		_typeMap["float"] = FLOAT;
 		_typeMap["double"] = DOUBLE;
-
-/*	this->_functInstr = {
-		{"push", &Vm::push},
-		{"pop", &Vm::pop},
-		{"assert", &Vm::assert},
-		{"dump", &Vm::dump},
-		{"add", &Vm::add},
-		{"sub", &Vm::sub},
-		{"mul", &Vm::mul},
-		{"div", &Vm::div},
-		{"mod", &Vm::mod},
-		{"exit", &Vm::exit},
-		{"print", &Vm::print}
-	};*/
 
 		_functInstr["push"] = &Vm::push;
 		_functInstrNoArgs["pop"] = &Vm::pop;
@@ -95,11 +73,10 @@ void	Vm::add(){
 
 	if (vmt->empty() || (vmt->size() < 2))
 		throw NotEnoughValuesError();
-	nb0 = vmt->back();
-	vmt->pop_back();
 	nb1 = vmt->back();
 	vmt->pop_back();
-
+	nb0 = vmt->back();
+	vmt->pop_back();
 	vmt->push_back(*nb0 + *nb1);
 	delete nb0;
 	delete nb1;
@@ -111,11 +88,10 @@ void	Vm::sub(){
 
 	if (vmt->empty() || (vmt->size() < 2))
 		throw NotEnoughValuesError();
-	nb0 = vmt->back();
-	vmt->pop_back();
 	nb1 = vmt->back();
 	vmt->pop_back();
-
+	nb0 = vmt->back();
+	vmt->pop_back();
 	vmt->push_back(*nb0 - *nb1);
 	delete nb0;
 	delete nb1;
@@ -127,11 +103,10 @@ void	Vm::mul(){
 
 	if (vmt->empty() || (vmt->size() < 2))
 		throw NotEnoughValuesError();
-	nb0 = vmt->back();
-	vmt->pop_back();
 	nb1 = vmt->back();
 	vmt->pop_back();
-
+	nb0 = vmt->back();
+	vmt->pop_back();
 	vmt->push_back(*nb0 * *nb1);
 	delete nb0;
 	delete nb1;
@@ -143,11 +118,10 @@ void	Vm::div(){
 
 	if (vmt->empty() || (vmt->size() < 2))
 		throw NotEnoughValuesError();
-	nb0 = vmt->back();
-	vmt->pop_back();
 	nb1 = vmt->back();
 	vmt->pop_back();
-
+	nb0 = vmt->back();
+	vmt->pop_back();
 	vmt->push_back(*nb0 / *nb1);
 	delete nb0;
 	delete nb1;
@@ -159,11 +133,10 @@ void	Vm::mod(){
 
 	if (vmt->empty() || (vmt->size() < 2))
 		throw NotEnoughValuesError();
-	nb0 = vmt->back();
-	vmt->pop_back();
 	nb1 = vmt->back();
 	vmt->pop_back();
-
+	nb0 = vmt->back();
+	vmt->pop_back();
 	vmt->push_back(*nb0 % *nb1);
 	delete nb0;
 	delete nb1;
@@ -174,7 +147,7 @@ void	Vm::print(){
 		throw EmptyStackError();
 	if (vmt->back()->getType() != INT8)
 		throw AssertError();
-	std::cout<<vmt->back()->toString()<<std::endl;
+	std::cout<<static_cast<Int8 const *>(vmt->back())->getValue();
 }
 
 void	Vm::exit(void){
@@ -188,18 +161,21 @@ void	Vm::exec(std::vector<Token> &listInstr)
 
 	for (std::vector<Token>::iterator it = listInstr.begin(); it != listInstr.end(); ++it) {
 		if (_functInstr.find(it->getInstr()) != _functInstr.end()) {
-			std::cout << it->getInstr() << " " <<  it->getType() << " " << it->getValue() << std::endl;
-			(*Vm::_functInstr[it->getInstr()])(f.createOperand(Vm::_typeMap[it->getType()], it->getValue()));
+			// std::cout << it->getInstr() << " " <<  it->getType() << " " << it->getValue() << std::endl;
+			(this->*_functInstr[it->getInstr()])(f.createOperand(Vm::_typeMap[it->getType()], it->getValue()));
 		}
 		else if (_functInstrNoArgs.find(it->getInstr()) != _functInstrNoArgs.end()) {
-			std::cout << it->getInstr() << std::endl;
-			(*Vm::_functInstrNoArgs[it->getInstr()])();
+			// std::cout << it->getInstr() << std::endl;
+			(this->*_functInstrNoArgs[it->getInstr()])();
+			// (this->*(_functionInstruction[it->name]))(*it);
+
 		}
 		/*if (!(it->getType()).empty())
 			std::cout << it->getInstr() << " args : " <<  it->getType() << ", " << it->getValue() << std::endl;
 		else
 			std::cout << it->getInstr() << std::endl;*/
 	}
+	throw ExitError();
 }
 
 /*
