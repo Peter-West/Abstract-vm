@@ -37,7 +37,6 @@ private:
 	void						_check_semicolon(std::string);
 	void						_tokenize(std::string line);
 	void						_check_tokens();
-	void						_check_instructions();
 	void						_fill_start_array();
 	void						_list_errors();
 	void						_print_values();

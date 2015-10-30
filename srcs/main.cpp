@@ -25,7 +25,6 @@ int main(int argc, char **argv)
 		else if (argc == 2) {
 			P = new parse(argv[1]);
 			VirM = new Vm();
-			std::cout<<"Par la"<<std::endl;
 			VirM->exec(*P->vecTok, false);
 		}
 		else if (argc == 1) {
@@ -37,17 +36,14 @@ int main(int argc, char **argv)
 			std::cout<<"usage : [filename]" <<std::endl << "Verbose mode : -v"<<std::endl;
 			exit(0);
 		}
+		if (P)
+			delete(P);
+		if (VirM)
+			delete(VirM);
 	}
 	catch (std::exception &e)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	// std::cout << *P
-	if (P) {
-		std::cout<<"yo"<<std::endl;
-		delete(P);
-	}
-	/*if (VirM)
-		delete(VirM);*/
 	return (0);
 }

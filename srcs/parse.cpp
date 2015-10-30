@@ -4,7 +4,6 @@
 parse::parse() : _end_instructions(false) {
 	_fill_start_array();
 	_input_read();
-	// _check_instructions();
 	_list_errors();
 }
 
@@ -12,7 +11,6 @@ parse::parse(char *name) : _end_instructions(false) {
 	std::cout<<"File read : "<< name <<std::endl;
 	_fill_start_array();
 	_file_read(name);
-	// _check_instructions();
 	_list_errors();
 }
 
@@ -26,7 +24,7 @@ parse &parse::operator=(parse const & rhs) {
 }
 
 parse::~parse() {
-	// std::cout<<"Parse destructor"<<std::endl;
+	std::cout<<"Parse destructor"<<std::endl;
 }
 
 void 	parse::_check_semicolon(std::string line) {
@@ -105,8 +103,7 @@ void					parse::_check_tokens() {
 	for (std::vector<int>::size_type i = 0; i != _tokens.size(); i++) {
 		for (std::vector<int>::size_type j = 0; j != _instructions_type.size(); j++) {
 			if ((found_instruction = _tokens[i].find(_instructions_type[j], 0)) != std::string::npos) {
-				// instructions.push_back(_tokens[i]);
-				instr = _tokens[i];				
+				instr = _tokens[i];
 				if (_tokens[i] == "push" || _tokens[i] == "assert") {
 					if (!_tokens[i + 1].empty()) {
 						for (std::vector<int>::size_type k = 0; k != _values_type.size(); k++) {
@@ -118,7 +115,7 @@ void					parse::_check_tokens() {
 								if (!r_value.empty() && stop != std::string::npos && start != std::string::npos) {
 									if (_check_values(_tokens[i + 1], r_value)) {
 										value = r_value;
-										vecTok->push_back(new Token(instr, type, value));
+										vecTok->push_back(Token(instr, type, value));
 									}
 								}
 								if ((stop - start < 1) || (stop == std::string::npos || start == std::string::npos))
@@ -127,12 +124,12 @@ void					parse::_check_tokens() {
 								break ;
 							}
 						}
-						if (found_value == std::string::npos) 
+						if (found_value == std::string::npos)
 							errors.push_back("Parsing Error - Value type not found : " + _tokens[i]);
 				 	}
 				}
 				else
-					vecTok->push_back(new Token(instr));
+					vecTok->push_back(Token(instr));
 				break;
 			}
 			if (j == (_instructions_type.size() - 1))
@@ -146,9 +143,8 @@ bool					parse::_check_values(std::string type, std::string value) {
 		std::regex reg("[-]?[0-9]+");
 		if (!std::regex_match(value, reg))
 			throw Int8ArgError();
-		if (std::stod(value) > 127) {
+		if (std::stod(value) > 127)
 			throw Int8OverError();
-		}
 		if (std::stod(value) < -128)
 			throw Int8UnderError();
 	}

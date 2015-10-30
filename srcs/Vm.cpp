@@ -147,7 +147,11 @@ void	Vm::print(){
 		throw EmptyStackError();
 	if (vmt->back()->getType() != INT8)
 		throw AssertError();
-	std::cout<<static_cast<Int8 const *>(vmt->back())->getValue();
+	if (_verbose)
+		std::cout<<static_cast<Int8 const *>(vmt->back())->getValue()<<std::endl;
+	else
+		std::cout<<static_cast<Int8 const *>(vmt->back())->getValue();
+
 }
 
 void	Vm::exit(void){
@@ -173,42 +177,3 @@ void	Vm::exec(std::vector<Token> &listInstr, bool verbose) {
 	}
 	throw ExitError();
 }
-
-/*
-void	Vm::exec(std::vector<Token> & vt)
-{
-	Factory						 f;
-	std::vector<Token>::iterator it;
-
-	for (it = vt.begin(); it != vt.end(); ++it)
-	{
-		if (Parser::instrNoArg.find((*it).getInstr()) != Parser::instrNoArg.end())
-		{
-			if (this->verb)
-				std::cout << (*it).getInstr() << std::endl;
-			(this->*Parser::instrNoArg[(*it).getInstr()])();
-		}
-		else if (Parser::instrWithArg.find((*it).getInstr()) != Parser::instrWithArg.end())
-		{
-			if (this->verb)
-				std::cout << (*it).getType() << " " << (*it).getValue()  << std::endl;
-			(this->*Parser::instrWithArg[(*it).getInstr()])(f.createOperand(Parser::typeResolver[(*it).getType()], (*it).getValue()));
-		}
-		else
-			throw UnknownCommandError();
-	}
-	throw ExitError();
-}
-
-
-*/
-
-
-
-
-
-
-
-
-
-
