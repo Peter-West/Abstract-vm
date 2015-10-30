@@ -155,25 +155,21 @@ void	Vm::exit(void){
 }
 
 
-void	Vm::exec(std::vector<Token> &listInstr)
-{
+void	Vm::exec(std::vector<Token> &listInstr, bool verbose) {
 	Factory		f;
+	_verbose = verbose;
 
 	for (std::vector<Token>::iterator it = listInstr.begin(); it != listInstr.end(); ++it) {
 		if (_functInstr.find(it->getInstr()) != _functInstr.end()) {
-			// std::cout << it->getInstr() << " " <<  it->getType() << " " << it->getValue() << std::endl;
+			if (_verbose)
+				std::cout << it->getInstr() << " " <<  it->getType() << " " << it->getValue() << std::endl;
 			(this->*_functInstr[it->getInstr()])(f.createOperand(Vm::_typeMap[it->getType()], it->getValue()));
 		}
 		else if (_functInstrNoArgs.find(it->getInstr()) != _functInstrNoArgs.end()) {
-			// std::cout << it->getInstr() << std::endl;
+			if (_verbose)
+				std::cout << it->getInstr() << std::endl;
 			(this->*_functInstrNoArgs[it->getInstr()])();
-			// (this->*(_functionInstruction[it->name]))(*it);
-
 		}
-		/*if (!(it->getType()).empty())
-			std::cout << it->getInstr() << " args : " <<  it->getType() << ", " << it->getValue() << std::endl;
-		else
-			std::cout << it->getInstr() << std::endl;*/
 	}
 	throw ExitError();
 }

@@ -23,7 +23,7 @@ public:
 
 	std::vector<std::string>	&split(const std::string &s, char delim, std::vector<std::string> &elems);
 	void						split(const std::string &s, char delim);
-	std::vector<std::string>	instructions;
+	// std::vector<std::string>	instructions;
 	std::vector<std::string>	errors;
 	std::string					instr;
 	std::string					type;
@@ -47,7 +47,6 @@ private:
 	std::vector<std::string>	_tmp;
 	std::vector<std::string>	_instructions_type;
 	std::vector<std::string>	_values_type;
-	// std::vector<std::string>	_operands_type;
 	bool						_end_instructions;
 	bool						_parse_error;
 };

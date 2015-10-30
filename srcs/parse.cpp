@@ -76,7 +76,6 @@ void	parse::_file_read(char *name) {
 	}
 	else
 		throw FileError();
-		// std::cout<<"Error while opening the file : " << name <<std::endl;
 }
 
 void	parse::_fill_start_array() {
@@ -106,7 +105,7 @@ void					parse::_check_tokens() {
 	for (std::vector<int>::size_type i = 0; i != _tokens.size(); i++) {
 		for (std::vector<int>::size_type j = 0; j != _instructions_type.size(); j++) {
 			if ((found_instruction = _tokens[i].find(_instructions_type[j], 0)) != std::string::npos) {
-				instructions.push_back(_tokens[i]);
+				// instructions.push_back(_tokens[i]);
 				instr = _tokens[i];				
 				if (_tokens[i] == "push" || _tokens[i] == "assert") {
 					if (!_tokens[i + 1].empty()) {
@@ -119,25 +118,25 @@ void					parse::_check_tokens() {
 								if (!r_value.empty() && stop != std::string::npos && start != std::string::npos) {
 									if (_check_values(_tokens[i + 1], r_value)) {
 										value = r_value;
-										vecTok->push_back(Token(instr, type, value));
+										vecTok->push_back(new Token(instr, type, value));
 									}
 								}
 								if ((stop - start < 1) || (stop == std::string::npos || start == std::string::npos))
-									errors.push_back("Error - Value not found : " + _tokens[i + 1]);
+									errors.push_back("Parsing Error - Value not found : " + _tokens[i + 1]);
 								i++;
 								break ;
 							}
 						}
 						if (found_value == std::string::npos) 
-							errors.push_back("Error - Value type not found : " + _tokens[i]);
+							errors.push_back("Parsing Error - Value type not found : " + _tokens[i]);
 				 	}
 				}
 				else
-					vecTok->push_back(Token(instr));
+					vecTok->push_back(new Token(instr));
 				break;
 			}
 			if (j == (_instructions_type.size() - 1))
-				errors.push_back("Error - Syntax error : " + _tokens[i]);
+				errors.push_back("Parsing Error - Syntax error : " + _tokens[i]);
 		}
 	}
 }
@@ -145,65 +144,49 @@ void					parse::_check_tokens() {
 bool					parse::_check_values(std::string type, std::string value) {
 	if (type.find("int8", 0, 4) != std::string::npos)	{
 		std::regex reg("[-]?[0-9]+");
-		if (!std::regex_match(value, reg)) {
-			errors.push_back("Error - Value is no 8 bits integer : " + value);
-			return (false);
+		if (!std::regex_match(value, reg))
+			throw Int8ArgError();
+		if (std::stod(value) > 127) {
+			throw Int8OverError();
 		}
-		if ((std::stod(value) > 127) || (std::stod(value) < -128)) {
-			std::string tmp = "Error - " + value + " is beyond an int 8 bits";
-			errors.push_back(tmp);
-			return (false);
-		}
+		if (std::stod(value) < -128)
+			throw Int8UnderError();
 	}
 
 	if (type.find("int16", 0, 5) != std::string::npos)	{
 		std::regex reg("[-]?[0-9]+");
-		if (!std::regex_match(value, reg)) {
-			errors.push_back("Error - Value is no 16 bits integer : " + value);
-			return (false);
-		}
-		if ((std::stod(value) > 32767) || (std::stod(value) < -32768)) {
-			std::string tmp = "Error - " + value + " is beyond an int 16 bits";
-			errors.push_back(tmp);
-			return (false);
-		}
+		if (!std::regex_match(value, reg))
+			throw Int16ArgError();
+		if (std::stod(value) > 32767)
+			throw Int16OverError();
+		if (std::stod(value) < -32768)
+			throw Int16UnderError();
 	}
 
 	if (type.find("int32", 0, 5) != std::string::npos)	{
 		std::regex reg("[-]?[0-9]+");
-		if (!std::regex_match(value, reg)) {
-			errors.push_back("Error - Value is no 32 bits integer : " + value);
-			return (false);
-		}
-		if ((std::stod(value) > 2147483647) || (std::stod(value) < -2147483648)) {
-			std::string tmp = "Error - " + value + " is beyond an int 32 bits";
-			errors.push_back(tmp);
-			return (false);
-		} 
+		if (!std::regex_match(value, reg))
+			throw Int32ArgError();
+		if (std::stod(value) > 2147483647)
+			throw Int32OverError();
+		if (std::stod(value) < -2147483648)
+			throw Int32UnderError();
 	}
 
 	if (type.find("float", 0, 5) != std::string::npos)	{
 		std::regex reg("[-]?[0-9]+[.][0-9]+");
-		if (!std::regex_match(value, reg)) {
-			errors.push_back("Error - Value is not a float : " + value);
-			return (false);
-		}
-		
-		if ((std::stod(value) > std::numeric_limits<float>::max()) || (std::stod(value) < std::numeric_limits<float>::min())) {
-			// throw OverflowError();
-			std::string tmp = "Error - " + value + " is beyond a float";
-			errors.push_back(tmp);
-			return (false);
-		}
+		if (!std::regex_match(value, reg))
+			throw FloatArgError();
+		if (std::stod(value) > std::numeric_limits<float>::max())
+			throw FloatOverError();
+		if (std::stod(value) < std::numeric_limits<float>::min())
+			throw FloatUnderError();
 	}
 
-	// check overflow
 	if (type.find("double", 0, 6) != std::string::npos)	{		
 		std::regex reg("[-]?[0-9]+[.][0-9]+");
-		if (!std::regex_match(value, reg)) {
-			errors.push_back("Error - Value is not a double : " + value);
-			return (false);
-		}
+		if (!std::regex_match(value, reg))
+			throw DoubleArgError();
 	}
 	return (true);
 }

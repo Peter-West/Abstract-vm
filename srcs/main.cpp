@@ -12,15 +12,29 @@ int main(int argc, char **argv)
 
 	try
 	{
-		if (argc == 2) {
+		if (argc == 3 && argv[1][0] == '-' && argv[1][1] == 'v' && argv[1][2] == '\0') {
+			P = new parse(argv[2]);
+			VirM = new Vm();
+			VirM->exec(*P->vecTok, true);
+		}
+		else if (argc == 2 && argv[1][0] == '-' && argv[1][1] == 'v' && argv[1][2] == '\0') {
+			P = new parse();
+			VirM = new Vm();
+			VirM->exec(*P->vecTok, true);
+		}
+		else if (argc == 2) {
 			P = new parse(argv[1]);
 			VirM = new Vm();
-			VirM->exec(*P->vecTok);
+			std::cout<<"Par la"<<std::endl;
+			VirM->exec(*P->vecTok, false);
 		}
-		else if (argc == 1)
+		else if (argc == 1) {
 			P = new parse();
+			VirM = new Vm();
+			VirM->exec(*P->vecTok, false);
+		}
 		else {
-			std::cout<<"Error : Wrong usage "<<std::endl;
+			std::cout<<"usage : [filename]" <<std::endl << "Verbose mode : -v"<<std::endl;
 			exit(0);
 		}
 	}
@@ -28,6 +42,12 @@ int main(int argc, char **argv)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	delete(P);
+	// std::cout << *P
+	if (P) {
+		std::cout<<"yo"<<std::endl;
+		delete(P);
+	}
+	/*if (VirM)
+		delete(VirM);*/
 	return (0);
 }

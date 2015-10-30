@@ -1,0 +1,9 @@
+pu int(32))
+push int8(98)
+banania
+push int78(56)
+
+push double(987.8)
+mul
+dump
+exit

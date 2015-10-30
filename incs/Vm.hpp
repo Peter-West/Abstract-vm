@@ -12,14 +12,16 @@ class Vm {
 	private:
 		Vm(Vm const &src);
 		Vm &operator=(Vm const & rhs);
-		std::vector<IOperand const *> *vmt;
+		std::vector<IOperand const *>			*vmt;
 
 		typedef void (Vm::*functInstr)(IOperand const *);
 		typedef void (Vm::*functInstrNoArgs)(void);
 
-		std::map<std::string, eOperandType>	_typeMap;
-		std::map<std::string, functInstr>	_functInstr;
+		std::map<std::string, eOperandType>		_typeMap;
+		std::map<std::string, functInstr>		_functInstr;
 		std::map<std::string, functInstrNoArgs>	_functInstrNoArgs;
+
+		bool									_verbose;
 
 	public: 
 		Vm();
@@ -35,7 +37,7 @@ class Vm {
 		void	mod(void);
 		void	print(void);
 		void	exit(void);
-		void	exec(std::vector<Token> &);
+		void	exec(std::vector<Token> &, bool);
 	};
 
 
